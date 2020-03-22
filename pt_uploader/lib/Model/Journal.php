@@ -20,7 +20,14 @@ class Journal extends \MyApp\Model{
         $stmt->execute();
         $stmt->setFetchMode(\PDO::FETCH_CLASS, 'stdClass');
         return $stmt->fetchAll();
+    }
 
+    public function findPresenter($values){
+        $stmt = $this->db->prepare("SELECT * from journal where presenter = :presenter");
+        $stmt->bindValue(':presenter',$values,\PDO::PARAM_STR);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'stdClass');
+        return $stmt->fetchAll();
     }
 
     public function delete($values){

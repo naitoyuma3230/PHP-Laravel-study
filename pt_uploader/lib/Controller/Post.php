@@ -6,7 +6,7 @@ class Post extends \MyApp\Controller{
     // formからPOST['token']をComplate.phpに送る
     public function run(){
         if(!$this->isLogeedIn()){
-            // Login済みなら
+            // Loginしてなかったら
             header('Location: ' . SITE_URL . '/login.php');
             exit;
         }

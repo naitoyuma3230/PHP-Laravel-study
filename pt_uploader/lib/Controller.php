@@ -50,6 +50,7 @@ class Controller{
             return $this->isLogeedIn() ? $_SESSION['me'] : null;
         }
 
-        
-
+        public function getMessage(){
+            return isset($_SESSION['message'])  ?   $_SESSION['message'] : '';
+        }
 }

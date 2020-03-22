@@ -30,7 +30,12 @@ $app->run();
     <div class="upload-container">
       <div class="title">
         <p>タイトル</p>
-        <a class="title-link" href="editmenu.php?id=<?=$journal->id?>"><p><?= h($journal->title); ?></p></a>
+        <div class="my-5 display-3 text-center">
+          <form action="editmenu.php" method="post">
+            <input type="hidden" name="id" value="<?= h($journal->id); ?>">
+            <button type="submit" class="non"><a><?= h($journal->title); ?></a></button>
+          </form>
+        </div>
       </div>
       <div class="presenter">
         <p>発表者</p>

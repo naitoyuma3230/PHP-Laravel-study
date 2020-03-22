@@ -15,6 +15,7 @@ $app->run();
   <div class="upload">
     <?php foreach ($app->getValues()->journals as $journal) : ?>
     <div class="upload-container">
+      <p class="h4 text-center text-danger "><?= h($app->getMessage()); ?></p>
       <div class="title">
         <p>タイトル</p>
         <a class="title-link"><p><?= h($journal->title); ?></p></a>
@@ -42,7 +43,8 @@ $app->run();
   </div>
   <div class="menu-container">
     <form action="update.php" method="post">
-      <input type="hidden" name="id" value="<?=$journal->id?>">
+    <input type="hidden" name="presenter" value="<?= h($journal->presenter); ?>">
+      <input type="hidden" name="id" value="<?= h($journal->id); ?>">
       <button class="btn-square">投稿の修正</button>
     </form>
 

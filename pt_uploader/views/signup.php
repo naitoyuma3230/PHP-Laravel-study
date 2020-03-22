@@ -19,8 +19,9 @@ $app->run();
     <?php include('head.inc.php'); ?>
   </head>
   <body>
+  <?php include('header.inc.php'); ?>
+    <div class="text-center" id="container">
     <h3>Please SignUp</h3>
-    <div id="container">
       <form action="" method="post" id="signup">
         <p>
           <input type="text" name="email" placeholder="email" value="<?=
@@ -32,13 +33,12 @@ $app->run();
         </p>
         <p class = "err"><?= h($app->getErrors('password')); ?></p>
 
-        <div class="btn" onclick="document.getElementById('signup').submit();">Sign Up</div>
+        <div class="btn btn-primary" onclick="document.getElementById('signup').submit();">Sign Up</div>
         <!-- クリックアクションでFormのid='signup'を取得してsubmit関数を実行。
         Signup.phpはPostでのリダイレクトでform情報の検証エラーメッセージの受け取った取りを行う-->
-        <p class="fs12"><a href="login.php">Log In</a></p>
+        <p class="btn btn-default"><a href="login.php">Log In</a></p>
         <input type="hidden" name="token" value="<?= h($_SESSION['token']); ?>">
         <!-- Signup.phpで設定された$_SESSION['token']の値をForm情報としてPost送信 -->
-
       </form>
 
     </div>

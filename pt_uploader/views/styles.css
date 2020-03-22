@@ -160,3 +160,8 @@ h2{
 .menu-container form{
   display: inline-block;
 }
+
+.non{
+  background-color: white;
+  border-style: none;
+}

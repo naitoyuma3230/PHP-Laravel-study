@@ -12,8 +12,8 @@ $app->run();
     <?php include('header.inc.php'); ?>
 
     <h1 id="confirm-t">削除確認</h1>
-    <h3 class="text-center"><?php echo  h($app->getErrors('post')); ?></h3>
-    <h3 class="text-center"><?php echo  h($app->getValues()->journals[0]->title); ?></h3>
+    <h4 class="text-center"><?php echo  h($app->getErrors('post')); ?></h4>
+    <h4 class="text-center"><?php echo  h($app->getValues()->journals->title); ?></h4>
 
     <?php include('footer.inc.php'); ?>
   </body>

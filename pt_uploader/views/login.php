@@ -21,8 +21,9 @@ $app->run();
   <?php include('head.inc.php'); ?>
 </head>
 <body>
-  <h3>Please RogIn</h3>
-  <div id="container">
+<?php include('header.inc.php'); ?>
+  <div class="text-center" id="container">
+  <h3>Please LogIn</h3>
     <form action="" method="post" id="login">
       <p>
         <input type="text" name="email" placeholder="email" value="<?= isset($app->getValues()->email) ? h($app->getValues()->email) : ''; ?>">
@@ -31,8 +32,9 @@ $app->run();
         <input type="password" name="password" placeholder="password">
       </p>
       <p class="err"><?= h($app->getErrors('login')); ?></p>
-      <div class="btn" onclick="document.getElementById('login').submit();">Log In</div>
-      <p class="fs12"><a href="signup.php">Sign Up</a></p>
+      
+      <div class="btn btn-primary" onclick="document.getElementById('login').submit();">Log In</div>
+      <p class="btn btn-default"><a href="signup.php">Sign Up</a></p>
       <input type="hidden" name="token" value="<?= h($_SESSION['token']); ?>">
     </form>
   </div>

@@ -4,11 +4,23 @@ namespace MyApp\Controller;
 class Deletecomplate extends \MyApp\Controller{
 
     public function run(){
+        if(!$this->isLogeedIn()){
+            // Loginしてなかったら
+            header('Location: ' . SITE_URL . '/login.php');
+            exit;
+        }
+        if($_SESSION['me']->email !== $_POST['presenter']){
+            $_SESSION['message'] = "投稿者とログインユーザーが一致しません";
+            header('Location: ' . SITE_URL . '/editmenu.php');
+            exit;
+        }else{
+            $_SESSION['message'] = "";
+        }
         echo $_SERVER['REQUEST_METHOD'];
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             /*POSTメソッドでアクセスしたなら*/
             $journalModel = new \MyApp\Model\Journal();
-            $this->setValues('journals' , $journalModel->findId($_POST['id']));
+            $this->setValues('journals' , $journalModel->findId($_SESSION['id']));
             $this->deleteProcess();
         }
         

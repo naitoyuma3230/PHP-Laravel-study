@@ -17,7 +17,7 @@ PRIMARY KEY(id,title,presenter,abstract)
 INSERT INTO journal(title,presenter,abstract,keyword1,keyword2,keyword3,maintext,created,modified)
 VALUES
   ("前庭機能低下に対し感覚入力に着目した介入を行い、自宅退院に至った症例",
-    "presenter",
+    "r1020247@yahoo.co.jp",
     "今回、くも膜下出血、交通性水頭症後、動作時のめまい感、平衡機能低下が原因でADL能力の低下を呈した症例を担当した。前庭機能を中心に視覚、体制感覚など姿勢制御における感覚情報の入力に着目し訓練を行った。その際、病前に監督として指導を行っていたサッカーを訓練として取り入れた介入を行い、自宅退院に至ったためここに紹介する。",
     "前庭","感覚","監督",
     "【はじめに】
