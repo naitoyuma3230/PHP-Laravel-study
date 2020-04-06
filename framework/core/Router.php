@@ -45,7 +45,7 @@ class Router{
         }
 
         foreach($this->routes as $pattern => $params){
-            // $routesに格納されたパターンで検索、結果':'以降の動的パラメータを$matchに格納
+            // $routesに格納されたパターンで検索、結果':'以降の動的パラメータを$matchesに格納
             if(preg_match('#^' . $pattern . '$#', $path_info, $matches)){
                 $parms = array_merge($params, $matches);
 
