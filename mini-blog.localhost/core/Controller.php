@@ -1,28 +1,16 @@
 <?php
 
-/**
- * Controller.
- *
- * @author Katsuhiro Ogawa <fivestar@nequal.jp>
- */
-abstract class Controller
-{
+abstract class Controller{
     protected $controller_name;
     protected $action_name;
     protected $application;
     protected $request;
-    protected $response;
     protected $session;
-    protected $db_manager;
+    protected $db_mangager;
+
     protected $auth_actions = array();
 
-    /**
-     * コンストラクタ
-     *
-     * @param Application $application
-     */
-    public function __construct($application)
-    {
+    public function __construct($application){
         $this->controller_name = strtolower(substr(get_class($this), 0, -10));
 
         $this->application = $application;
@@ -32,43 +20,24 @@ abstract class Controller
         $this->db_manager  = $application->getDbManager();
     }
 
-    /**
-     * アクションを実行
-     *
-     * @param string $action
-     * @param array $params
-     * @return string レスポンスとして返すコンテンツ
-     *
-     * @throws UnauthorizedActionException 認証が必須なアクションに認証前にアクセスした場合
-     */
-    public function run($action, $params = array())
-    {
+    public function run($action,$parms = array()){
         $this->action_name = $action;
 
         $action_method = $action . 'Action';
-        if (!method_exists($this, $action_method)) {
+        if(!method_exists($this,$action_method)){
             $this->forward404();
         }
 
-        if ($this->needsAuthentication($action) && !$this->session->isAuthenticated()) {
+        if($this->needsAuthentication($action) && !$this->session->isAuthenticated()){
             throw new UnauthorizedActionException();
         }
 
-        $content = $this->$action_method($params);
+        $content = $this->$action_method($parms);
 
         return $content;
     }
 
-    /**
-     * ビューファイルのレンダリング
-     *
-     * @param array $variables テンプレートに渡す変数の連想配列
-     * @param string $template ビューファイル名(nullの場合はアクション名を使う)
-     * @param string $layout レイアウトファイル名
-     * @return string レンダリングしたビューファイルの内容
-     */
-    protected function render($variables = array(), $template = null, $layout = 'layout')
-    {
+    protected function render($variables = array(), $template = null, $layout = 'layout'){
         $defaults = array(
             'request'  => $this->request,
             'base_url' => $this->request->getBaseUrl(),
@@ -86,47 +55,28 @@ abstract class Controller
         return $view->render($path, $variables, $layout);
     }
 
-    /**
-     * 404エラー画面を出力
-     *
-     * @throws HttpNotFoundException
-     */
-    protected function forward404()
-    {
+    protected function forward404(){
         throw new HttpNotFoundException('Forwarded 404 page from '
-            . $this->controller_name . '/' . $this->action_name);
+        . $this->controller_name . '/' . $this->action_name);
     }
 
-    /**
-     * 指定されたURLへリダイレクト
-     *
-     * @param string $url
-     */
-    protected function redirect($url)
-    {
-        if (!preg_match('#https?://#', $url)) {
+    protected function redirect($url){
+        if(!preg_match('#https?://#', $url)){
             $protocol = $this->request->isSsl() ? 'https://' : 'http://';
-            $host = $this->request->getHost();
+            $host = $this->requesst->getHost();
             $base_url = $this->request->getBaseUrl();
 
             $url = $protocol . $host . $base_url . $url;
         }
 
         $this->response->setStatusCode(302, 'Found');
-        $this->response->setHttpHeader('Location', $url);
+        $this->respones->setHttpHeader('Location', $url);
     }
 
-    /**
-     * CSRFトークンを生成
-     *
-     * @param string $form_name
-     * @return string $token
-     */
-    protected function generateCsrfToken($form_name)
-    {
+    protected function generateCsrfToken($form_name){
         $key = 'csrf_tokens/' . $form_name;
         $tokens = $this->session->get($key, array());
-        if (count($tokens) >= 10) {
+        if(count($tokens) >= 10){
             array_shift($tokens);
         }
 
@@ -138,38 +88,22 @@ abstract class Controller
         return $token;
     }
 
-    /**
-     * CSRFトークンが妥当かチェック
-     *
-     * @param string $form_name
-     * @param string $token
-     * @return boolean
-     */
-    protected function checkCsrfToken($form_name, $token)
-    {
+    protected function checkCsrfToken($form_name, $token){
         $key = 'csrf_tokens/' . $form_name;
         $tokens = $this->session->get($key, array());
 
-        if (false !== ($pos = array_search($token, $tokens, true))) {
+        if(false !== ($pos = array_search($token, $tokens, true))){
             unset($tokens[$pos]);
             $this->session->set($key, $tokens);
 
             return true;
         }
-
         return false;
     }
 
-    /**
-     * 指定されたアクションが認証済みでないとアクセスできないか判定
-     *
-     * @param string $action
-     * @return boolean
-     */
     protected function needsAuthentication($action)
     {
-        if ($this->auth_actions === true
-            || (is_array($this->auth_actions) && in_array($action, $this->auth_actions))
+        if ($this->auth_actions === true || (is_array($this->auth_actions) && in_array($action, $this->auth_actions))
         ) {
             return true;
         }

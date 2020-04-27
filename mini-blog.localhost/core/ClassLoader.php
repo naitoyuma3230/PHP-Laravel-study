@@ -1,46 +1,30 @@
 <?php
 
-/**
- * ClassLoader.
- *
- * @author Katsuhiro Ogawa <fivestar@nequal.jp>
- */
-class ClassLoader
-{
+class ClassLoader{
+
     protected $dirs;
 
-    /**
-     * 自身をオートロードスタックに登録
-     */
-    public function register()
-    {
+    public function register(){
         spl_autoload_register(array($this, 'loadClass'));
+        // 関数の引数にオブジェクトのインスタンスを渡すには配列を使用。配列0にオブジェクト、1 にメソッド名を指定
+        // クラス定義時にこのクラスの$this->loadclassが実行されるよう登録する
     }
 
-    /**
-     * オートロード対象のディレクトリを登録
-     *
-     * @param string $dir
-     */
-    public function registerDir($dir)
-    {
+    public function registerDir($dir){
         $this->dirs[] = $dir;
     }
 
-    /**
-     * クラスを読み込む
-     *
-     * @param string $class
-     */
-    public function loadClass($class)
-    {
-        foreach ($this->dirs as $dir) {
+    public function loadClass($class){
+        foreach ($this->dirs as $dir){
             $file = $dir . '/' . $class . '.php';
-            if (is_readable($file)) {
+            // is_readable:ファイルの存在、読み込み可否を返す
+            // dir名/class名.phpで登録されたファイルをDir総当たりで検索
+            if(is_readable($file)){
                 require $file;
 
                 return;
             }
         }
     }
+
 }

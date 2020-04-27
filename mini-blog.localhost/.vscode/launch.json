@@ -9,7 +9,7 @@
             "type": "php",
             "request": "launch",
             "port": 9001,
-            "pathMappings": "C:\\xampp\\htdocs\\mini-blog.localhost",
+            "pathMappings": "C:\\xampp\\htdocs\\framework",
             "localSourceRoot": "${workspaceRoot}"
         },
         {

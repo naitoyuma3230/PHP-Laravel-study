@@ -1,131 +1,113 @@
 <?php
 
-/**
- * Request.
- *
- * @author Katsuhiro Ogawa <fivestar@nequal.jp>
- */
-class Request
-{
-    /**
-     * リクエストメソッドがPOSTかどうか判定
-     *
-     * @return boolean
-     */
-    public function isPost()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+class Request{
+
+    // Postリクエストの判別
+    public function isPost(){
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
             return true;
         }
-
         return false;
     }
 
-    /**
-     * GETパラメータを取得
-     *
-     * @param string $name
-     * @param mixed $default 指定したキーが存在しない場合のデフォルト値
-     * @return mixed
-     */
-    public function getGet($name, $default = null)
-    {
-        if (isset($_GET[$name])) {
+    // Getリクエスト情報の取得 [?クエリ文字列(URLパラメータ)]
+    public function getGet($name, $default = null){
+        if(isset($_GET[$name])){
             return $_GET[$name];
         }
 
         return $default;
     }
 
-    /**
-     * POSTパラメータを取得
-     *
-     * @param string $name
-     * @param mixed $default 指定したキーが存在しない場合のデフォルト値
-     * @return mixed
-     */
-    public function getPost($name, $default = null)
-    {
-        if (isset($_POST[$name])) {
+    // Postリクエスト情報の取得
+    public function getPost($name, $default = null){
+        if(isset($_POST[$name])){
             return $_POST[$name];
         }
 
         return $default;
     }
 
-    /**
-     * ホスト名を取得
-     *
-     * @return string
-     */
-    public function getHost()
-    {
-        if (!empty($_SERVER['HTTP_HOST'])) {
+    // [Host名(ドメイン)]の取得
+    public function getHost(){
+        if(!empty($_SERVER['HTTP_HOST'])){
             return $_SERVER['HTTP_HOST'];
+
         }
-        
-        return $_SERVER['SERVER_NAME'];
+
+        return  $_SERVER['SERVER_NAME'];
+        // アパッチ側のHost名
     }
 
-    /**
-     * SSLでアクセスされたかどうか判定
-     *
-     * @return boolean
-     */
-    public function isSsl()
-    {
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+    // Https：暗号化通信の使用の有無を判別
+    public function isSsl(){
+        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS' === 'on']){
             return true;
         }
+
         return false;
     }
 
-    /**
-     * リクエストURIを取得
-     *
-     * @return string
-     */
-    public function getRequestUri()
-    {
+    // [Path名] + [?クエリ文字列(GETパラメータ)] の取得 間に[PATH_INFO]が入る
+    public function getRequestUri(){
         return $_SERVER['REQUEST_URI'];
     }
 
-    /**
-     * ベースURLを取得
-     *
-     * @return string
-     */
-    public function getBaseUrl()
-    {
+
+    //      [プロトコル]          [Host名(ドメイン)]        [Path名]       [?クエリ文字列(GETパラメータ)]     
+    //   Http:// or Https://     (www).exanple.com     /core/index.php               ?id=123
+    
+    // [BaseURL]:ファイル名省略に対応した[Path名]
+    // [PATH_INFO]:内部的URL    [Path名]と[GETパラメータ]の間にありRouterで使用
+    public function getBaseUrl(){
+        
+        // [Path名]の取得
         $script_name = $_SERVER['SCRIPT_NAME'];
 
+        // [Path名] + [?クエリ文字列(URLパラメータ)] の取得
         $request_uri = $this->getRequestUri();
 
-        if (0 === strpos($request_uri, $script_name)) {
+        // strposで$script_nameの場所を検索 0=先頭
+        if(0 === strpos($request_uri, $script_name)){
             return $script_name;
-        } else if (0 === strpos($request_uri, dirname($script_name))) {
+
+        // dirname($script_name):index.php(ファイル名）が省略されている場合 dirnameでディレクトリのみ抜き出し検索
+        }else if(0 === strpos($request_uri, dirname($script_name))){
+            // 省略の場合 末尾が'/'になるためトリミング
             return rtrim(dirname($script_name), '/');
         }
 
-        return '';
+        return;
     }
 
-    /**
-     * PATH_INFOを取得
-     *
-     * @return string
-     */
-    public function getPathInfo()
-    {
+    public function getPathInfo(){
+
         $base_url = $this->getBaseUrl();
         $request_uri = $this->getRequestUri();
 
-        if (false !== ($pos = strpos($request_uri, '?'))) {
+        // strposで'?'の位置を取得
+        if(false !== ($pos = strpos($request_uri, '?'))){
+
+            // substrで先頭=0 から'?'の位置までのURLを取得 GETパラメータを取り除く
             $request_uri = substr($request_uri, 0, $pos);
         }
 
+        // BaseURLを取り除く
         $path_info = (string)substr($request_uri, strlen($base_url));
+
 
         return $path_info;
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }
